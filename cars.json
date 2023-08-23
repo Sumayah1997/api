@@ -1,0 +1,23 @@
+[
+    {
+        "id":1,
+        "make":"Toyota",
+        "model":"Camry",
+        "year":2023,
+        "imagepath":
+    },
+
+    {
+        "id":2,
+        "make":"Ford",
+        "model":"Expidition",
+        "year":2022
+    },
+    
+    {
+        "id":3,
+        "make":"Chevrolet",
+        "model":"Subarban",
+        "year":2020
+    }
+]

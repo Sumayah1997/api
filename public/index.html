@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    <title>car details </title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <div class="container m-5">
+        <h3>Car Details as received from Server</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Year</th>
+                </tr>
+            </thead>
+            <tbody id="CarDetails"></tbody>
+        </table>
+
+        <h2>add new car</h2>
+        <form id="AddCarForm">
+            <div class="m-3">
+                <label for="make" class="form-label">Make</label>
+                <input type="text" class="form-control" id="make" required>
+            </div>
+            <div class="m-3">
+                <label for="model" class="form-label">Model</label>
+                <input type="text" class="form-control" id="model" required>
+            </div>
+            <div class="m-3">
+                <label for="year" class="form-label">Year</label>
+                <input type="number" class="form-control" id="year" required>
+            </div>
+
+            <div class="m-3">
+                <label for="image" class="form-label">Image</label>
+                <input type="file" id="image" accept="image/*"required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Car</button>
+        </div>
+        <script>
+            const CarDetails = document.getElementById('CarDetails');
+            fetch ('/api/cars')
+            .then(response => response.json())
+            .then(data=>
+            {   data.forEach(cars =>
+                {   CarDetails.innerHTML += 
+                    `<tr>
+                        <td>${cars.id}</td>
+                        <td>${cars.make}</td>
+                        <td>${cars.model}</td>
+                        <td>${cars.year}</td>
+                        </tr>`;
+                })
+            .catch(error=> {console.log('Error Fetching the Details.', error);});
+            });
+
+
+
+            const AddCarForm = document.getElementById("AddCarForm");
+            AddCarForm.addEventListener('submit',(e)=>
+            {e.preventDefault();
+                const make = document.getElementById('make').value;
+                const model = document.getElementById('model').value;
+                const year =  parseInt(document.getElementById('year').value);
+                const ImageIP = document.getElementById('image');
+                // const FormData = new FormData();
+                // FormData.append('make',make);
+                // FormData.append('model',model);
+                // FormData.append('year',year);
+                // if(ImageIP.files[0])
+                // {FormData.append('image',ImageIP.files[0]);}
+
+                const NewCar = {make , model , year ,ImageIP };
+
+                fetch('./api/cars',
+            {
+                method:'POST',
+                headers:{'Content-Type': 'application/json'},
+                // body:FormData      
+                body: JSON.stringify(NewCar)
+            })
+            .then (response=>response.json())
+            .then(data=>
+            {
+                CarDetails.innerHTML +=
+                    `<tr>
+                        <td>${data.car.id}</td>
+                        <td>${data.car.make}</td>
+                        <td>${data.car.model}</td>
+                        <td>${data.car.year}</td>
+                        <td><img src="upload/${data.car.image}" alt="${data.car.model}" width="100"></td>
+                    </tr>`;
+                    AddCarForm.reset();
+            })
+            .catch(error=>{console.log("error adding car?",error);
+        });
+
+            });
+            
+    </script>
+
+
+
+
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- <script src="server.js"></script> -->
+</body>
+    
+
+</html>
